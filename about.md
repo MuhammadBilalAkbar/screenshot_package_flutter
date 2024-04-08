@@ -117,7 +117,82 @@
     ```dart
       return Screenshot(
           controller: controller,
-          child: Scaffold()
+          child: Scaffold(
     ```
-3. We can also use `captureAndSave`, `captureAsUiImage`, and `captureFromLongWidget` methods of our
-   screenshot controller.
+3. This is the UI with one image and two elevated button:
+    ```dart
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  buildImage(),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await controller.capture().then(
+                        (bytes) {
+                          if (bytes != null) {
+                            saveImage(bytes);
+                            saveAndShare(bytes);
+                          }
+                        },
+                      ).catchError(
+                        (onError) {
+                          debugPrint(onError);
+                        },
+                      );
+                    },
+                    child: const Text('Take Screenshot'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await controller.captureFromWidget(buildImage()).then(
+                        (bytes) {
+                          saveImage(bytes);
+                          saveAndShare(bytes);
+                        },
+                      ).catchError(
+                        (onError) {
+                          debugPrint(onError);
+                        },
+                      );
+                    },
+                    child: const Text('Capture Widget'),
+                  ),
+                ],
+              ),
+            ),
+   
+     Widget buildImage() => SizedBox(
+        width: double.infinity,
+        height: 600,
+        child: Image.asset('img.png', fit: BoxFit.cover),
+      );
+    ```
+4. Here are save image and share image methods:
+    ```dart
+      final time = DateTime.now()
+          .toIso8601String()
+          .replaceAll('.', '-')
+          .replaceAll(':', '-');
+    
+      Future<void> saveAndShare(Uint8List bytes) async {
+        final directory = Platform.isAndroid
+            ? await getExternalStorageDirectory() // Android
+            : await getApplicationDocumentsDirectory(); // iOS
+        final image = File('${directory!.path}/$time.png');
+        image.writeAsBytes(bytes);
+        await Share.shareXFiles([XFile(image.path)]);
+      }
+    
+      Future<void> saveImage(Uint8List bytes) async {
+        final name = 'screenshot_$time';
+        await Permission.storage.request();
+        final result = await ImageGallerySaver.saveImage(bytes, name: name);
+        debugPrint('result: $result');
+        // return result['filePath'];
+      }
+    ```
+5. We can also use `captureAndSave`, `captureAsUiImage`, and `captureFromLongWidget` methods of our
+screenshot controller.

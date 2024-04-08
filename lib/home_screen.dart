@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     (bytes) {
                       if (bytes != null) {
                         saveImage(bytes);
-                        // saveAndShare(bytes);
+                        saveAndShare(bytes);
                       }
                     },
                   ).catchError(
@@ -99,12 +99,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await Share.shareXFiles([XFile(image.path)]);
   }
 
-  Future<String> saveImage(Uint8List bytes) async {
+  Future<void> saveImage(Uint8List bytes) async {
     final name = 'screenshot_$time';
     await Permission.storage.request();
     final result = await ImageGallerySaver.saveImage(bytes, name: name);
-    debugPrint('result $result');
-    return result['filePath'];
+    debugPrint('result: $result');
+    // return result['filePath'];
   }
 
   Widget buildImage() => SizedBox(
