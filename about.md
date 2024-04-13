@@ -119,7 +119,8 @@
           controller: controller,
           child: Scaffold(
     ```
-3. This is the UI with one image and two elevated button:
+3. This is the UI with one image and two elevated button. For two elevated buttons, we are
+   using `capture` and `captureFromWidget` methods of screenshot controller:
     ```dart
             body: Center(
               child: Column(
@@ -167,7 +168,7 @@
      Widget buildImage() => SizedBox(
         width: double.infinity,
         height: 600,
-        child: Image.asset('img.png', fit: BoxFit.cover),
+        child: Image.asset('image.png', fit: BoxFit.cover),
       );
     ```
 4. Here are save image and share image methods:
@@ -195,4 +196,4 @@
       }
     ```
 5. We can also use `captureAndSave`, `captureAsUiImage`, and `captureFromLongWidget` methods of our
-screenshot controller.
+   screenshot controller.
