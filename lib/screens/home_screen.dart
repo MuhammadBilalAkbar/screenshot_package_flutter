@@ -104,5 +104,5 @@ Future<void> saveImage(Uint8List bytes) async {
 Widget buildImage() => SizedBox(
       width: double.infinity,
       height: 600,
-      child: Image.asset('image.png', fit: BoxFit.cover),
+      child: Image.asset('assets/image.png', fit: BoxFit.cover),
     );
